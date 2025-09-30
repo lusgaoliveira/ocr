@@ -87,3 +87,15 @@ def get_text_by_title(title):
         "title": title,
         "text": content
     })
+
+@ocr_bp.route('/ocr/', methods=['GET'])
+def get_all_texts():
+    texts = {}
+    for filename in os.listdir(OUTPUT_DIR):
+        if filename.endswith('.txt'):
+            title = filename[:-4] 
+            file_path = os.path.join(OUTPUT_DIR, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                texts[title] = f.read()
+
+    return jsonify(texts)

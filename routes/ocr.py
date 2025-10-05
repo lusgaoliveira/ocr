@@ -13,6 +13,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 @ocr_bp.route('/ocr', methods=['POST'])
+
 def ocr_api():
     start_time = time.time()
 
@@ -52,25 +53,33 @@ def ocr_api():
 
         final_text = "\n".join(texts)
 
-        # Salvo normal
         file_path = os.path.join(OUTPUT_DIR, f"{title}.txt")
 
-        # Append se o título já existir na pasta
+        file_exists = os.path.exists(file_path)
+
         with open(file_path, "a", encoding="utf-8") as f:
             f.write(final_text + "\n")
+
+        if file_exists:
+            with open(file_path, "r", encoding="utf-8") as f:
+                full_text = f.read()
+            text_to_return = full_text
+        else:
+            text_to_return = final_text
 
         end_time = time.time()
         execution_time = end_time - start_time
 
         return jsonify({
             "title": title,
-            "text": final_text,
+            "text": text_to_return, 
             "file_saved": file_path,
             "execution_time_sec": f"{round(execution_time, 3)} sec"
         })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 @ocr_bp.route('/ocr/<title>', methods=['GET'])

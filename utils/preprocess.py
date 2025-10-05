@@ -22,7 +22,7 @@ def preprocess_image(image_input):
     precisar de tanto processamento quanto ao outro porque aqui o kernel pega a mediana da área definida, sendo mais simples.
     '''
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.medianBlur(gray, 3)
+    gray = cv2.medianBlur(gray, 5)
     gray = cv2.fastNlMeansDenoising(gray, h=10)
 
     # Ajuste de contraste local de forma autmomatica
